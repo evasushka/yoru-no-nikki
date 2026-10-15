@@ -24,8 +24,8 @@ body:before{content:"";position:fixed;inset:0;background:rgba(12,15,13,.20);poin
 .monthname{min-width:clamp(130px,24vw,260px);text-align:center;font-size:clamp(1.3rem,3.2vw,2.5rem);font-weight:400;letter-spacing:.04em}
 .year{opacity:.82;font-size:.75em;margin-left:.35em}
 button{font:inherit;color:inherit;cursor:pointer}
-.navbtn,.today{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:50%;width:40px;height:40px;font-size:1.2rem}
-.today{border-radius:12px;width:auto;height:auto;padding:10px 16px;font-size:.95rem;position:absolute;right:0}
+.navbtn,#today{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:50%;width:40px;height:40px;font-size:1.2rem}
+#today{border-radius:12px;width:auto;height:auto;padding:10px 16px;font-size:.95rem;position:absolute;right:0}
 button:hover{background:rgba(255,255,255,.20)}
 .calendar-shell{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(28,31,28,.25);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
 .weekdays,.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
@@ -52,7 +52,7 @@ button:hover{background:rgba(255,255,255,.20)}
  .monthnav{gap:10px;padding:7px 9px;border-radius:13px}
  .monthname{min-width:0;font-size:1.12rem;white-space:nowrap}
  .navbtn{width:32px;height:32px;font-size:1rem}
- .today{position:static;padding:8px 9px;font-size:.78rem}
+ #today{position:static;padding:8px 9px;font-size:.78rem}
  .weekday{font-size:.66rem;padding:9px 0}
  .day{aspect-ratio:.72}
  .date{left:4px;top:4px;font-size:.72rem}
