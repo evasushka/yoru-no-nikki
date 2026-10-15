@@ -1,6 +1,5 @@
 # 月の記録 — Tsuki Photo Calendar
 
----
 
 ## A little calendar for slow days
 
