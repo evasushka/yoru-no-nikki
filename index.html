@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#252823">
+<meta name="description" content="A quiet monthly photo calendar.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>Tsuki — Photo Calendar</title>
 <style>
 :root{--line:rgba(255,255,255,.52);--glass:rgba(30,32,29,.43);--glass2:rgba(30,32,29,.60);--ink:#f6f5f0}
@@ -141,6 +148,7 @@ button:hover{background:rgba(255,255,255,.20)}
     };
     reader.readAsDataURL(file);e.target.value="";
   });
+  if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {})); }
   function shift(n){const d=new Date(year,month+n,1);year=d.getFullYear();month=d.getMonth();selectedDay=Math.min(selectedDay,new Date(year,month+1,0).getDate());render();}
   $("prev").addEventListener("click",()=>shift(-1));$("next").addEventListener("click",()=>shift(1));
   $("today").addEventListener("click",()=>{year=now.getFullYear();month=now.getMonth();selectedDay=now.getDate();render();});
