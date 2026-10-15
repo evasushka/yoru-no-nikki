@@ -1,24 +1,20 @@
+月の記録 — Tsuki Photo Calendar
 
-# 夜の日記 — Yoru no Nikki
+A little calendar for slow days.
 
-*A tiny journal for slow days.*
+A tiny photo calendar inspired by Japanese aesthetics, misty forests, and the beauty of everyday moments.
 
-A little corner of the internet for quiet moments, small joys, books, and everyday life.
+📷 My Little Calendar
 
-## 今日の気分 — Today's mood
-A little note about how I feel today.
+A place to keep memories, one photograph at a time.
 
-## 小さな幸せ — Little happiness
-One small thing that made today special.
+Things I love
 
-## 今日のこと — Today's notes
-A few words about my day.
-
-## Things I love
-- Rainy afternoons
-- Warm tea
-- Quiet walks
-- Books and little notebooks
+- Quiet mornings
+- Misty forests
+- Film photography
+- Little moments worth remembering
 
 ---
-*Made slowly, with love.*
+
+Made slowly, with love. 🌿
