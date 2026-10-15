@@ -1,0 +1,24 @@
+
+{
+  "name": "Tsuki Photo Calendar",
+  "short_name": "Photo Calendar",
+  "description": "A quiet monthly calendar for your photos.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#252823",
+  "theme_color": "#252823",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
