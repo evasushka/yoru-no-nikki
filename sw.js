@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "tsuki-photo-calendar-v1";
+const CACHE_NAME = "tsuki-photo-calendar-v2";
 
 const FILES = [
   "./",
