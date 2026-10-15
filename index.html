@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#252823">
+<title>Tsuki — Photo Calendar</title>
+<style>
+:root{--line:rgba(255,255,255,.52);--glass:rgba(30,32,29,.43);--glass2:rgba(30,32,29,.60);--ink:#f6f5f0}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+body{min-height:100vh;background:#272b27 url("background.jpg") center center/cover fixed no-repeat;position:relative}
+body:before{content:"";position:fixed;inset:0;background:rgba(12,15,13,.20);pointer-events:none}
+.app{position:relative;width:min(1500px,100%);margin:auto;padding:clamp(14px,3vw,38px)}
+.header{display:flex;justify-content:center;align-items:center;gap:clamp(10px,2vw,28px);margin:0 auto clamp(18px,3vw,38px);position:relative}
+.monthnav{display:flex;align-items:center;gap:clamp(14px,3vw,38px);background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:8px 18px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.monthname{min-width:clamp(130px,24vw,260px);text-align:center;font-size:clamp(1.3rem,3.2vw,2.5rem);font-weight:400;letter-spacing:.04em}
+.year{opacity:.82;font-size:.75em;margin-left:.35em}
+button{font:inherit;color:inherit;cursor:pointer}
+.navbtn,.today{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:50%;width:40px;height:40px;font-size:1.2rem}
+.today{border-radius:12px;width:auto;height:auto;padding:10px 16px;font-size:.95rem;position:absolute;right:0}
+button:hover{background:rgba(255,255,255,.20)}
+.calendar-shell{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(28,31,28,.25);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.weekdays,.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.weekday{background:rgba(48,51,47,.48);text-align:center;padding:clamp(8px,1.4vw,17px) 2px;font-size:clamp(.72rem,1.3vw,1.15rem);border-right:1px solid var(--line);border-bottom:1px solid var(--line);letter-spacing:.04em}
+.weekday:last-child{border-right:0}
+.day{position:relative;min-width:0;aspect-ratio:1.02;border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;background:rgba(245,245,240,.075);overflow:hidden;text-align:left}
+.day:nth-child(7n){border-right:0}
+.day:nth-last-child(-n+7){border-bottom:0}
+.day.empty{background:rgba(15,17,15,.12);cursor:default}
+.day img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.day.has-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.42),transparent 36%,transparent 65%,rgba(0,0,0,.25));pointer-events:none}
+.date{position:absolute;z-index:1;left:clamp(5px,1vw,13px);top:clamp(5px,1vw,12px);font-size:clamp(.72rem,1.5vw,1.2rem);text-shadow:0 1px 5px #000}
+.day.has-photo .date{background:rgba(0,0,0,.24);padding:2px 5px;border-radius:4px}
+.day.today .date{outline:1px solid white;outline-offset:3px}
+.day.selected{box-shadow:inset 0 0 0 2px #fff;outline:2px solid white;outline-offset:-3px;z-index:2}
+.day:focus-visible{outline:3px solid white;outline-offset:-3px;z-index:3}
+.addhint{position:absolute;inset:auto 0 0;text-align:center;padding:8px 2px;background:rgba(0,0,0,.24);font: .7rem Arial,sans-serif;opacity:0;transition:opacity .15s}
+.day:not(.has-photo):hover .addhint{opacity:.8}
+.footer{text-align:center;font-size:.8rem;letter-spacing:.14em;opacity:.75;padding:18px 0 0}
+#picker{display:none}
+@media(max-width:650px){
+ .app{padding:12px 7px 22px}
+ .header{margin-bottom:14px;justify-content:center;padding-bottom:0}
+ .monthnav{gap:10px;padding:7px 9px;border-radius:13px}
+ .monthname{min-width:0;font-size:1.12rem;white-space:nowrap}
+ .navbtn{width:32px;height:32px;font-size:1rem}
+ .today{position:static;padding:8px 9px;font-size:.78rem}
+ .weekday{font-size:.66rem;padding:9px 0}
+ .day{aspect-ratio:.72}
+ .date{left:4px;top:4px;font-size:.72rem}
+ .calendar-shell{border-radius:9px}
+}
+@media(max-width:380px){.today{display:none}.day{aspect-ratio:.66}.weekday{font-size:.6rem}}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="header">
+    <div class="monthnav">
+      <button class="navbtn" id="prev" aria-label="Previous month">‹</button>
+      <div class="monthname"><span id="monthLabel">Month</span><span class="year" id="yearLabel"></span></div>
+      <button class="navbtn" id="next" aria-label="Next month">›</button>
+    </div>
+    <button class="today" id="today">Today</button>
+  </header>
+  <section class="calendar-shell" aria-label="Photo calendar">
+    <div class="weekdays">
+      <div class="weekday">Mon</div><div class="weekday">Tue</div><div class="weekday">Wed</div>
+      <div class="weekday">Thu</div><div class="weekday">Fri</div><div class="weekday">Sat</div><div class="weekday">Sun</div>
+    </div>
+    <div class="calendar" id="calendar"></div>
+  </section>
+  <div class="footer">月の記録 · LITTLE MOMENTS, KEPT</div>
+  <input id="picker" type="file" accept="image/*">
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const now = new Date();
+  let year = now.getFullYear(), month = now.getMonth(), selectedDay = now.getDate(), db = null;
+  const open = indexedDB.open("TsukiPhotoCalendar", 1);
+  open.onupgradeneeded = e => {
+    const d = e.target.result;
+    if (!d.objectStoreNames.contains("days")) d.createObjectStore("days", {keyPath:"id"});
+  };
+  open.onsuccess = e => { db=e.target.result; render(); };
+  open.onerror = () => alert("Could not open local photo storage. Please open the published site in Chrome.");
+  function id(day){return `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;}
+  function store(mode="readonly"){return db.transaction("days",mode).objectStore("days");}
+  function get(idValue,cb){const r=store().get(idValue);r.onsuccess=()=>cb(r.result||{id:idValue,photo:null});}
+  function save(item,cb){const r=store("readwrite").put(item);r.onsuccess=()=>cb&&cb();}
+  function render(){
+    if(!db)return;
+    $("monthLabel").textContent=months[month];$("yearLabel").textContent=year;
+    const cal=$("calendar");cal.replaceChildren();
+    const offset=(new Date(year,month,1).getDay()+6)%7;
+    const count=new Date(year,month+1,0).getDate();
+    for(let i=0;i<offset;i++){const b=document.createElement("div");b.className="day empty";cal.append(b);}
+    for(let d=1;d<=count;d++){
+      const b=document.createElement("button");b.type="button";b.className="day";
+      b.setAttribute("aria-label",`${months[month]} ${d}: choose or change photo`);
+      if(d===selectedDay)b.classList.add("selected");
+      if(d===now.getDate()&&month===now.getMonth()&&year===now.getFullYear())b.classList.add("today");
+      const n=document.createElement("span");n.className="date";n.textContent=d;b.append(n);
+      const hint=document.createElement("span");hint.className="addhint";hint.textContent="＋ Photo";b.append(hint);
+      get(id(d),item=>{
+        if(item.photo){b.classList.add("has-photo");const im=document.createElement("img");im.alt="";im.src=URL.createObjectURL(item.photo);b.prepend(im);}
+      });
+      b.addEventListener("click",()=>{
+        selectedDay=d;
+        get(id(d),item=>{
+          if(item.photo){
+            const choice=confirm("This day already has a photo. OK = replace it, Cancel = choose another action.");
+            if(!choice){render();return;}
+          }
+          $("picker").click();
+        });
+        render();
+      });
+      cal.append(b);
+    }
+  }
+  $("picker").addEventListener("change",e=>{
+    const file=e.target.files&&e.target.files[0];if(!file||!db)return;
+    if(!file.type.startsWith("image/")){alert("Please choose an image.");e.target.value="";return;}
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const im=new Image();
+      im.onload=()=>{
+        const scale=Math.min(1,1500/Math.max(im.width,im.height));
+        const c=document.createElement("canvas");c.width=Math.max(1,Math.round(im.width*scale));c.height=Math.max(1,Math.round(im.height*scale));
+        c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+        c.toBlob(blob=>{
+          if(!blob){alert("Could not process that photo.");return;}
+          get(id(selectedDay),item=>{item.photo=blob;save(item,()=>render());});
+        },"image/jpeg",.86);
+      };
+      im.onerror=()=>alert("Could not open this photo. Try another image.");im.src=reader.result;
+    };
+    reader.readAsDataURL(file);e.target.value="";
+  });
+  function shift(n){const d=new Date(year,month+n,1);year=d.getFullYear();month=d.getMonth();selectedDay=Math.min(selectedDay,new Date(year,month+1,0).getDate());render();}
+  $("prev").addEventListener("click",()=>shift(-1));$("next").addEventListener("click",()=>shift(1));
+  $("today").addEventListener("click",()=>{year=now.getFullYear();month=now.getMonth();selectedDay=now.getDate();render();});
+})();
+</script>
+</body>
+</html>
